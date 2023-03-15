@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    
+    <table id="mainTable">
+        <tr>
+            <td id="title">
+                Tic Tac Toe
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <hr width="440px">
+            </td>
+        </tr>
+        <tr>
+            <td id="content">
+                Select which you want to be?
+            </td>
+        </tr>
+        <tr>
+            <td id="footer">
+                <button class="selectBtn" onclick="selectPlayer('O')">Player (O)</button>
+                <button class="selectBtn" onclick="selectPlayer('X')">Player (X)</button>
+            </td>
+        </tr>
+    </table>
+
+    <table id="gameTable">
+        <tr>
+            <td id="gameTableTd"></td>
+        </tr>
+        <tr>
+            <td>
+                <button id="replayBtn" onclick="replay()">Replay</button>
+            </td>
+        </tr>
+    </table>
+
+    <script src="game.js"></script>
+
+</body>
+</html>

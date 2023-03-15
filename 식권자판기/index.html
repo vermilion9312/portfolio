@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        #headerTable {
+            margin: 0 auto;
+            text-align: center;
+        }
+        #statusTable {
+            margin: 0 auto;
+            text-align: center;
+        }
+        .centerTable {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #statusTable td, 
+        #LcountTable td, 
+        #RcountTable td, 
+        #LticketCountTable td, 
+        #RticketCountTable td, 
+        #receiptTable td {
+            border: 1px solid lightgray;
+        }
+
+        #statusTable td {
+            width: 120px;
+            height: 50px;
+        }
+
+        .emptyTable {
+            height: 50px;
+        }
+
+        #LcountTable td, #RcountTable td {
+            width: 80px;
+            height: 50px;
+        }
+
+        .LminusBtn, .LplusBtn, .RminusBtn, .RplusBtn {
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            background: white;
+            border: 1px solid lightgray;
+            border-radius: 3px;
+        }
+        .blackBtn {
+            cursor: pointer;
+            width: 410px;
+            height: 50px;
+            border: 0;
+            background: #333333;
+            border-radius: 3px;
+
+            font-size: 20px;
+            color: white;
+        }
+
+        #LticketCountTable td, #RticketCountTable td {
+            width: 135px;
+            height: 50px;
+        }
+
+        #receiptTable td {
+            width: 200px;
+            height: 50px;
+        }
+        #receiptEmptyTd {
+            width: 400px;
+        }
+
+        #statusTable tr:nth-child(1) {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #LcountTable td:nth-child(1), 
+        #RcountTable td:nth-child(1), 
+        #LticketCountTable td:nth-child(1), 
+        #LticketCountTable td:nth-child(1), 
+        #RticketCountTable td:nth-child(1),
+        #receiptTable td:nth-child(1) {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<!--
+    [예시1]
+    (1) 잔돈 충전하기 : 오백원(5), 일백원(5)
+    (2) 충전할 식권 매수 : 5
+    (3) 급액 투입하기 : 오천원(1)
+    (4) 식권 구입하기 : 1
+    (5) 영수증 출력
+        1) 결제 금액 : 3200
+        2) 투입 금액 : 5000
+        3) 거스름 돈 : 1800
+        4) 오백원 : 3
+        5) 일백원 : 3
+    (6) 결과
+        1) 식권 개수 : 4
+        2) 오만원(0), 일만원(0), 오천원(1), 일천원(0) 오백원(2) 일백원(2)
+
+    [예시2]
+    (1) 잔돈 충전하기 : 일천원(1), 오백원(5), 일백원(5)
+    (2) 충전할 식권 매수 : 5
+    (3) 금액 투입하기 : 일만원(1)
+    (4) 식권 구입하기 : 1
+    (5) 영수증 출력
+        * 잔돈이 부족해 거래 불가
+        1) 결제 금액 : 3200
+        2) 투입 금액 : 10000
+        3) 거스름 돈 : 6800
+
+    [예시3]
+    (1) 잔돈 충전하기 : 오천원(1), 일천원(1), 오백원(5), 일백원(5)
+    (2) 충전할 식권 매수 : 5
+    (3) 금액 투입하기 : 일만원(1)
+    (4) 식권 구입하기 : 1
+    (5) 영수증 출력
+        1) 결제 금액 : 3200
+        2) 투입 금액 : 10000
+        3) 거스름 돈 : 6800
+        4) 오천원 : 1
+        5) 일천원 : 1
+        6) 오백원 : 1
+        7) 일백원 : 3
+    (6) 결과
+        1) 식권 개수 : 4
+        2) 오만원(0), 일만원(1), 오천원(0), 일천원(0) 오백원(4) 일백원(2)
+ -->
+
+    <table id="headerTable">
+        <tr>
+            <td colspan="7">
+                <h1>식권 자판기</h1>
+            </td>
+        </tr>
+    </table>
+
+    <table id="statusTable">
+        <tr>
+            <td>식권 개수</td>
+            <td>오만원</td>
+            <td>일만원</td>
+            <td>오천원</td>
+            <td>일천원</td>
+            <td>오백원</td>
+            <td>일백원</td>
+        </tr>
+        <tr>
+            <td id="statusTicket">0</td>
+            <td class="statusCount">0</td>
+            <td class="statusCount">0</td>
+            <td class="statusCount">0</td>
+            <td class="statusCount">0</td>
+            <td class="statusCount">0</td>
+            <td class="statusCount">0</td>
+        </tr>
+    </table>
+
+    <table class="emptyTable"></table>
+
+    <table class="centerTable">
+        <tr>
+            <td>
+                <table id="LcountTable">
+                    <tr>
+                        <td colspan="5">
+                            <h2>관리자</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>오만원</td>
+                        <td>50000</td>
+                        <td><button class="LminusBtn">-</button></td>
+                        <td class="Lcount">0</td>
+                        <td><button class="LplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td>일만원</td>
+                        <td>10000</td>
+                        <td><button class="LminusBtn">-</button></td>
+                        <td class="Lcount">0</td>
+                        <td><button class="LplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td>오천원</td>
+                        <td>5000</td>
+                        <td><button class="LminusBtn">-</button></td>
+                        <td class="Lcount">0</td>
+                        <td><button class="LplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td>일천원</td>
+                        <td>1000</td>
+                        <td><button class="LminusBtn">-</button></td>
+                        <td class="Lcount">0</td>
+                        <td><button class="LplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td>오백원</td>
+                        <td>500</td>
+                        <td><button class="LminusBtn">-</button></td>
+                        <td class="Lcount">0</td>
+                        <td><button class="LplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td>일백원</td>
+                        <td>100</td>
+                        <td><button class="LminusBtn">-</button></td>
+                        <td class="Lcount">0</td>
+                        <td><button class="LplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">총 금액</td>
+                        <td colspan="3" id="Ltotal">0</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <button class="blackBtn" onclick="LplusMoney(this)">① 잔돈 충전하기</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td></td>
+            <td>
+                <table id="RcountTable">
+                    <tr>
+                        <td colspan="5">
+                            <h2>사용자</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>오만원</td>
+                        <td>50000</td>
+                        <td><button class="RminusBtn">-</button></td>
+                        <td class="Rcount">0</td>
+                        <td><button class="RplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td>일만원</td>
+                        <td>10000</td>
+                        <td><button class="RminusBtn">-</button></td>
+                        <td class="Rcount">0</td>
+                        <td><button class="RplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td>오천원</td>
+                        <td>5000</td>
+                        <td><button class="RminusBtn">-</button></td>
+                        <td class="Rcount">0</td>
+                        <td><button class="RplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td>일천원</td>
+                        <td>1000</td>
+                        <td><button class="RminusBtn">-</button></td>
+                        <td class="Rcount">0</td>
+                        <td><button class="RplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td>오백원</td>
+                        <td>500</td>
+                        <td><button class="RminusBtn">-</button></td>
+                        <td class="Rcount">0</td>
+                        <td><button class="RplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td>일백원</td>
+                        <td>100</td>
+                        <td><button class="RminusBtn">-</button></td>
+                        <td class="Rcount">0</td>
+                        <td><button class="RplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">투입 금액</td>
+                        <td colspan="3" class="Rtotal">0</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <button class="blackBtn" onclick="RplusMoney(this)">③ 금액 투입하기</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <table class="centerTable">
+        <tr>
+            <td>
+                <table id="LticketCountTable">
+                    <tr>
+                        <td colspan="3">충전할 식권 매수</td>
+                    </tr>
+                    <tr>
+                        <td><button class="LminusBtn">-</button></td>
+                        <td class="Lcount">0</td>
+                        <td><button class="LplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <button class="blackBtn" onclick="LplusTicket(this)">② 식권 충전하기</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td></td>
+            <td>
+                <table id="RticketCountTable">
+                    <tr>
+                        <td colspan="3">구매할 식권 매수</td>
+                    </tr>
+                    <tr>
+                        <td><button class="RminusBtn">-</button></td>
+                        <td class="Rcount">0</td>
+                        <td><button class="RplusBtn">+</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <button class="blackBtn" onclick="RplusTicket(this)">④ 식권 구입하기</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <table class="emptyTable"></table>
+
+    <table class="centerTable">
+        <tr>
+            <td id="receiptEmptyTd"></td>
+            <td></td>
+            <td id="receipt">
+                <table id='receiptTable'>
+                    <tr>
+                        <td colspan='2'>영수증 출력</td>
+                    </tr>
+                    <tr>
+                        <td>결제 금액</td>
+                        <td id="total">0</td>
+                    </tr>
+                    <tr>
+                        <td>투입 금액</td>
+                        <td class="Rtotal">0</td>
+                    </tr>
+                    <tr>
+                        <td>거스름 돈</td>
+                        <td id="charge">0</td>
+                    </tr>
+                    <tr>
+                        <td>오만원</td>
+                        <td class="receiptCount">0</td>
+                    </tr>
+                    <tr>
+                        <td>일만원</td>
+                        <td class="receiptCount">0</td>
+                    </tr>
+                    <tr>
+                        <td>오천원</td>
+                        <td class="receiptCount">0</td>
+                    </tr>
+                    <tr>
+                        <td>일천원</td>
+                        <td class="receiptCount">0</td>
+                    </tr>
+                    <tr>
+                        <td>오백원</td>
+                        <td class="receiptCount">0</td>
+                    </tr>
+                    <tr>
+                        <td>일백원</td>
+                        <td class="receiptCount">0</td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>이용해주셔서 감사합니다.</td>    
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <script>
+
+        let ticketPrice = 3200;
+        let sampleMoneyList = [50000, 10000, 5000, 1000, 500, 100];
+
+        let adminCountList = [0, 0, 0, 0, 0, 0];
+        let userCountList = [0, 0, 0, 0, 0, 0];
+
+        let LminusBtnList = document.querySelectorAll(".LminusBtn");
+        let LplusBtnList = document.querySelectorAll(".LplusBtn");
+        let LcountList = document.querySelectorAll(".Lcount");
+
+        let RminusBtnList = document.querySelectorAll(".RminusBtn");
+        let RplusBtnList = document.querySelectorAll(".RplusBtn");
+        let RcountList = document.querySelectorAll(".Rcount");
+
+        for(let i=0; i<7; i++) {
+            LminusBtnList[i].addEventListener("click", LminusClick);
+            LplusBtnList[i].addEventListener("click", LplusClick);
+            RminusBtnList[i].addEventListener("click", RminusClick);
+            RplusBtnList[i].addEventListener("click", RplusClick);
+        }
+
+        function LminusClick(e) {
+            for(let i=0; i<LminusBtnList.length; i++) {
+                if(e.target == LminusBtnList[i]) {
+                    if(Number( LcountList[i].textContent) > 0) {
+                        LcountList[i].textContent = Number(LcountList[i].textContent) - 1;
+                    }
+                }
+            }
+        }
+        function LplusClick(e) {
+            for(let i=0; i<LplusBtnList.length; i++) {
+                if(e.target == LplusBtnList[i]) {
+                    LcountList[i].textContent = Number(LcountList[i].textContent) + 1;
+                }
+            }
+        }
+        function RminusClick(e) {
+            for(let i=0; i<RminusBtnList.length; i++) {
+                if(e.target == RminusBtnList[i]) {
+                    if(Number( RcountList[i].textContent) > 0) {
+                        RcountList[i].textContent = Number(RcountList[i].textContent) - 1;
+                    }
+                }
+            }
+        }
+        function RplusClick(e) {
+            for(let i=0; i<RplusBtnList.length; i++) {
+                if(e.target == RplusBtnList[i]) {
+                    RcountList[i].textContent = Number(RcountList[i].textContent) + 1;
+                }
+            }
+        }
+
+        function disableBtn(dir, obj) {
+            obj.setAttribute("disabled", "disabled");
+            obj.style.background = "gray";
+
+            if(dir == "left") {
+                for(let i=0; i<LminusBtnList.length - 1; i++) {
+                    LminusBtnList[i].setAttribute("disabled", "disabled");
+                    LplusBtnList[i].setAttribute("disabled", "disabled");
+                }
+            } else {
+                for(let i=0; i<RminusBtnList.length - 1; i++) {
+                    RminusBtnList[i].setAttribute("disabled", "disabled");
+                    RplusBtnList[i].setAttribute("disabled", "disabled");
+                }
+            }
+
+            zeroBtn(dir);
+        }
+
+        function zeroBtn(dir) {
+            if(dir == "left") {
+                for(let i=0; i<LcountList.length; i++) {
+                    LcountList[i].textContent = 0;
+                }
+            } else {
+                for(let i=0; i<RcountList.length; i++) {
+                    RcountList[i].textContent = 0;
+                }
+            }
+        }
+
+        function setTotal(dir) {
+            let total = 0;
+            if(dir == "left") {
+                for(let i=0; i<sampleMoneyList.length; i++) {
+                    adminCountList[i] = Number(LcountList[i].textContent);
+                    total += sampleMoneyList[i] * Number(LcountList[i].textContent);
+                }
+                document.querySelector("#Ltotal").textContent = total;
+            } else {
+                for(let i=0; i<sampleMoneyList.length; i++) {
+                    userCountList[i] = Number(RcountList[i].textContent);
+                    total += sampleMoneyList[i] * Number(RcountList[i].textContent);
+                }
+                let rTotalList = document.querySelectorAll(".Rtotal");
+                for(let i=0; i<rTotalList.length; i++) {
+                    rTotalList[i].textContent = total;
+                }
+            }
+        }
+
+        function LplusMoney(obj) {
+            let statusCountList = document.querySelectorAll(".statusCount");
+            for(let i=0; i<statusCountList.length; i++) {
+                statusCountList[i].textContent = LcountList[i].textContent;
+            }
+
+            setTotal("left");
+            disableBtn("left", obj);
+        }
+
+        function RplusMoney(obj) {
+            setTotal("right");
+            disableBtn("right", obj);
+        }
+   
+        function LplusTicket(obj) {
+            document.querySelector("#statusTicket").textContent = LcountList[6].textContent;
+            LcountList[6].textContent = 0;
+            obj.setAttribute("disabled", "disabled");
+            obj.style.background = "gray";
+
+            LminusBtnList[6].setAttribute("disabled", "disabled");
+            LplusBtnList[6].setAttribute("disabled", "disabled");
+        }
+
+        function RplusTicket(obj) {
+            obj.setAttribute("disabled", "disabled");
+            obj.style.background = "gray";
+
+            RminusBtnList[6].setAttribute("disabled", "disabled");
+            RplusBtnList[6].setAttribute("disabled", "disabled");
+
+            calc();
+        }
+
+        function calc() {
+            /*
+                1. 구매할 식권수량 <= 재고
+                    (1) 투입 금액 >= 결제 금액
+                        1) 거스름돈 계산
+                        2) 잔돈이 충분하면
+                            투입, 관리자 지폐 수량 증가
+                            잔돈, 관리자 지폐 수량 감소
+                            식권수량 감소
+
+                            식권구매가 완료되었습니다.
+                        3) 잔돈이 충분하지 않으면
+                            잔돈이 부족합니다. 관리자에게 문의하세요.
+                    (2) 투입 금액 < 결제 금액
+                        투입한 금액이 부족합니다. 다시 거래를 진행해주세요.
+                2. 구매할 식권수량 > 재고
+                    식권이 부족합니다. 관리자에게 문의하세요.
+
+
+                    [영수증]
+                        결제 금액 : 
+                        투입 금액 : 
+                        거스름 돈 :
+
+            */
+
+            let tempAdminCountList = [0, 0, 0, 0, 0, 0];
+            let tempUserCountList = [0, 0, 0, 0, 0, 0];
+            for(let i=0; i<sampleMoneyList.length; i++) {
+                tempAdminCountList[i] = adminCountList[i];
+                tempAdminCountList[i] += userCountList[i];
+            }
+
+            let 구매수량 = Number(RcountList[6].textContent);
+            let 재고수량 = Number(document.querySelector("#statusTicket").textContent);
+            
+            let 결제금액 = 구매수량 * ticketPrice;
+            document.querySelector("#total").textContent = 결제금액;
+
+            let 투입금액 = Number(document.querySelectorAll(".Rtotal")[0].textContent);
+
+            if(구매수량 <= 재고수량) {
+                if(투입금액 >= 결제금액) {
+                    let 거스름돈 = 투입금액 - 결제금액;
+                    document.querySelector("#charge").textContent = 거스름돈;
+
+                    let temp = 거스름돈;
+                    console.log(거스름돈);
+
+                    for(let i=0; i<sampleMoneyList.length; i++) {
+                        while(true) {
+                            if(temp >= sampleMoneyList[i] && tempAdminCountList[i] > 0) {
+                                temp -= sampleMoneyList[i];
+                                tempAdminCountList[i] -= 1;
+                                tempUserCountList[i] += 1;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+
+                    console.log(tempUserCountList);
+
+                    if(temp == 0) {
+                        // 식권수량 감소
+                        document.querySelector("#statusTicket").textContent = 재고수량 - 구매수량;
+
+                        // 관리자 지폐수량 셋팅
+                        let statusCountList = document.querySelectorAll(".statusCount");
+                        let receiptCountList = document.querySelectorAll(".receiptCount");
+                        for(let i=0; i<sampleMoneyList.length; i++) {
+                            statusCountList[i].textContent = tempAdminCountList[i];
+                            receiptCountList[i].textContent = tempUserCountList[i];
+                        }
+                        alert("식권 구매가 완료되었습니다.");
+                    } else {
+                        alert("잔돈이 부족합니다. 관리자에게 문의하세요.");
+                    }
+                } else {
+                    alert("투입한 금액이 부족합니다. 다시 거래를 진행해주세요.");
+                }
+            } else {
+                alert("식권이 부족합니다. 관리자에게 문의하세요.");
+            }
+        }
+
+   </script>
+
+
+</body>
+</html>
