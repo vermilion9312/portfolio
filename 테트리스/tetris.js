@@ -1,74 +1,182 @@
 var blocks = [
   {
     name: "s",  // 블럭모양
+    index: 0,   // 아래 4개의 배열중 0번인덱스
     color: 1,   // 색상번호
-    shape: 
+    shape: [    // 테트리스 모양 
       [
         [0, 0, 0],
         [0, 1, 1],
         [1, 1, 0],
-      ]
-     
+      ],
+      [
+        [0, 1, 0],
+        [0, 1, 1],
+        [0, 0, 1],
+      ],
+      [
+        [0, 1, 1],
+        [1, 1, 0],
+        [0, 0, 0],
+      ],
+      [
+        [1, 0, 0],
+        [1, 1, 0],
+        [0, 1, 0],
+      ],
+    ]
   },
   {
     name: "z",
+    index: 0,
     color: 2,
-    shape: 
+    shape: [
       [
         [0, 0, 0],
         [1, 1, 0],
         [0, 1, 1],
-      ]
+      ],
+      [
+        [0, 0, 1],
+        [0, 1, 1],
+        [0, 1, 0],
+      ],
+      [
+        [1, 1, 0],
+        [0, 1, 1],
+        [0, 0, 0],
+      ],
+      [
+        [0, 1, 0],
+        [1, 1, 0],
+        [1, 0, 0],
+      ],
+    ]
   },
   {
     name: "t",
+    index: 0,
     color: 3,
-    shape: 
+    shape: [
       [
         [0, 0, 0],
         [1, 1, 1],
         [0, 1, 0],
-      ]
+      ],
+      [
+        [0, 1, 0],
+        [0, 1, 1],
+        [0, 1, 0],
+      ],
+      [
+        [0, 1, 0],
+        [1, 1, 1],
+        [0, 0, 0],
+      ],
+      [
+        [0, 1, 0],
+        [1, 1, 0],
+        [0, 1, 0],
+      ],
+    ]
   },
   {
     name: "l",
+    index: 0,
     color: 4,
-    shape: 
+    shape: [
       [
         [0, 1, 0],
         [0, 1, 0],
         [0, 1, 1],
-      ]
+      ],
+      [
+        [0, 0, 0],
+        [1, 1, 1],
+        [1, 0, 0],
+      ],
+      [
+        [1, 1, 0],
+        [0, 1, 0],
+        [0, 1, 0],
+      ],
+      [
+        [0, 0, 1],
+        [1, 1, 1],
+        [0, 0, 0],
+      ],
+    ]
   },
   {
     name: "lr",
+    index: 0,
     color: 5,
-    shape: 
+    shape: [
       [
         [0, 1, 0],
         [0, 1, 0],
         [1, 1, 0],
-      ]
+      ],
+      [
+        [1, 0, 0],
+        [1, 1, 1],
+        [0, 0, 0],
+      ],
+      [
+        [0, 1, 1],
+        [0, 1, 0],
+        [0, 1, 0],
+      ],
+      [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 0, 1],
+      ],
+    ]
   },
   {
     name: "o",
+    index: 0,
     color: 6,
-    shape: [   
+    shape: [
+      [
         [0, 0, 0],
         [0, 1, 1],
         [0, 1, 1],
+      ],
+    
     ]
   },
   {
     name: "b",
+    index: 0,
     color: 7,
-    shape: 
+    shape: [
       [
-        [0, 0, 0, 0],
-        [1, 1, 1, 1],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-      ]
+        [0, 0, 0 , 0],
+        [1, 1, 1 , 1],
+        [0, 0, 0 , 0],
+        [0, 0, 0 , 0],
+      ],
+      [
+        [0, 0, 1 , 0],
+        [0, 0, 1 , 0],
+        [0, 0, 1 , 0],
+        [0, 0, 1 , 0],
+      ],
+      [
+        [0, 0, 0 , 0],
+        [0, 0, 0 , 0],
+        [1, 1, 1 , 1],
+        [0, 0, 0 , 0],
+      ],
+      [
+        [0, 1, 0 , 0],
+        [0, 1, 0 , 0],
+        [0, 1, 0 , 0],
+        [0, 1, 0 , 0],
+      ],
+    ]
   },
 ]
 var curBlock;  // 현재블록의 위치를 저장할 배열 
@@ -115,41 +223,24 @@ function init() {
 
 }
 
-
-function gameOver(shape){
-  var realBlock = getRealBlock(shape)
-  if(getCanMove(realBlock , 0 , 0) == false){  
-      alert("game over");
-      window.location.reload() ;
-  }
-
-}
-
 function makeBlock() {
 
     var r = Math.floor(Math.random() * blocks.length);
     curBlock = blocks[r];
 
-    var shape = curBlock.shape;
-    
+    curBlock.index = 0;
+    var shape = curBlock.shape[0];
 
     cury = 1;  
     curx = 4; 
 
-    gameOver(shape);
-   
-   
     for (var y = 0; y < shape.length; y++) {
         for (var x = 0; x < shape.length; x++) {
-              if (shape[y][x] == 1) {
-              data[y + cury][x + curx] = curBlock.color;
+                if (shape[y][x] == 1) {
+                data[y + cury][x + curx] = curBlock.color;
             }
         }
     }
-
-  
-
-
 }
 
 
@@ -199,7 +290,7 @@ function setData(realBlock , ny , nx , color){
 }
 
 function down() {
-  var shape = curBlock.shape;
+  var shape = curBlock.shape[curBlock.index];
   var realBlock = getRealBlock(shape); // 현재블록의 실제 위치를 찾는다. 
   var canMove = getCanMove(realBlock, 1 , 0); // 한칸아래를 검사한다.
 
@@ -221,7 +312,7 @@ function down() {
 
 function left() {
   // 왼쪽 검사 
-  var shape = curBlock.shape;
+  var shape = curBlock.shape[curBlock.index];
   var realBlock = getRealBlock(shape);
   var canMove = getCanMove(realBlock , 0, -1);
   if (canMove == true){
@@ -232,12 +323,13 @@ function left() {
       setData(realBlock , 0, -1, curBlock.color);
       curx -= 1; // 현재x감소 
   }
+  return canMove // 결과 반환
 }
 
 
 function right() {
     //오른쪽 검사 
-    var shape = curBlock.shape;
+    var shape = curBlock.shape[curBlock.index];
     var realBlock = getRealBlock(shape);
     var canMove = getCanMove(realBlock , 0 , 1);
     if (canMove == true){
@@ -248,34 +340,14 @@ function right() {
         setData(realBlock , 0, 1, curBlock.color);
         curx += 1; // 현재x증가 
     }
-}
-
-function tempBlock(curShape){
-    var temp = [];
-    for(var y in curShape){
-      temp.push([])
-      for (var x in curShape){
-          temp[y].push(0);
-      } 
-    }
-
-    var lastIndex = curShape.length - 1;
-    for(var y in curShape){
-      for (var x in curShape){
-          temp[x][lastIndex] = curShape[y][x];
-      }
-      lastIndex -= 1; 
-    }
-    console.log(curShape);
-    console.log(temp);
-    return temp;
-
+    return canMove // 결과 반환
 }
 
 function rotate(){
-    var curShape = curBlock.shape;  
-    var nextShape = tempBlock(curShape);
-
+    var curShape = curBlock.shape[curBlock.index];
+    var nextIndex = curBlock.index + 1;
+    nextIndex %= 4; // nextIndex 가 4가 되면 0으로 변환
+    var nextShape = curBlock.shape[nextIndex];
     var curRealBlock = getRealBlock(curShape);
     var nextRealBlock = getRealBlock(nextShape);
     var canMove = getCanMove(nextRealBlock , 0 , 0);
@@ -284,25 +356,27 @@ function rotate(){
         setData(curRealBlock , 0, 0, WHITE);
         // (오른쪽 색칠) 
         setData(nextRealBlock , 0, 0, curBlock.color);
-        curBlock.shape = nextShape;
+
+        curBlock.index = nextIndex;
     }
+    return canMove;
 }
 
 function lineClear(){
-     
-  var del = [];
-  for(var y = 1; y  < 22 - 1 ; y ++){
-        var count = 0;
-        for(var x = 1; x < 12 - 1; x ++){
-        if(data[y][x] == BLACK){
-            count += 1;
-        }
-        if(count === 10){
-          del.push(y);       
-        }
-    }
-}
-  //console.log(del);
+   
+    var del = [];
+    for(var y = 1; y  < 22 - 1 ; y ++){
+          var count = 0;
+          for(var x = 1; x < 12 - 1; x ++){
+          if(data[y][x] == BLACK){
+              count += 1;
+          }
+          if(count === 10){
+            del.push(y);       
+          }
+      }
+  }
+  console.log(del);
   for(var i = 0; i < del.length; i++){
       data.splice(del[i] , 1);
       data.splice(0 , 1);
@@ -311,10 +385,35 @@ function lineClear(){
   }
 }
 
-
+function gameStart(){
+    if(gameOver() == true){
+        alert("game over");
+        history.go(0); // 새로고침
+    }
+    else if(down() == false){
+      lineClear();
+      makeBlock();   
+    }
+    draw();
+}
+function gameOver(){
+    var shape = curBlock.shape[curBlock.index];
+    var realBlock = getRealBlock(shape);
+    var canMove = getCanMove(realBlock , 1 , 0);
+    if (canMove == false && curx == 4 && cury == 1){
+        return true;
+    }
+    return false;
+}
 
 document.addEventListener("keydown", function (e) {
    // alert(e.code);
+    if(e.code == "KeyK"){
+        data.splice(data[0] , 1);
+        data.unshift([BOX,0,0,0,0,0,0,0,0,0,0,BOX]);
+        draw();
+    }
+
     if (e.code == "KeyS") {
         if(down() == false){
             lineClear();
@@ -335,12 +434,10 @@ document.addEventListener("keydown", function (e) {
         draw();
     }
     else if (e.code == "Space") {
-      while (down()) {}
-
-      lineClear();
-      makeBlock();
-      draw();
-        
+        while (down()) {}
+        lineClear();
+        makeBlock();
+        draw();
     }
 });
 
