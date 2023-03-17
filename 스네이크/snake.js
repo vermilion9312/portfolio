@@ -7,7 +7,7 @@ function draw() {
 
     drawTile();
     drawWall();
-    
+
     eat();
     setSnake();
     drawApple();
@@ -28,8 +28,12 @@ function setSnake() {
     x += dx;
     y += dy;
     console.log(x, y)
-    var snake = {x: x, y: y, color: "orange"};
-    while(snakeList.length > snakeLength) {
+    var snake = {
+        x: x,
+        y: y,
+        color: "orange"
+    };
+    while (snakeList.length > snakeLength) {
         snakeList.shift();
     }
     snakeList.push(snake);
@@ -71,15 +75,15 @@ function generateApple() {
     while (true) {
         check = true;
 
-        appleX = (Math.floor(Math.random() * ((canvas.width - 2 * size))  / size) + 1) * size;
+        appleX = (Math.floor(Math.random() * ((canvas.width - 2 * size)) / size) + 1) * size;
         appleY = (Math.floor(Math.random() * ((canvas.height - 2 * size)) / size) + 1) * size;
-        
+
         for (var i = 0; i < snakeList.length; i += 1) {
             if (snakeList[i].x == appleX && snakeList[i].y == appleY) {
                 check = false;
             }
         }
-        
+
         if (check) {
             break;
         }
@@ -87,7 +91,7 @@ function generateApple() {
 }
 
 function eat() {
-    if (x == appleX && y == appleY ) {
+    if (x == appleX && y == appleY) {
         snakeLength += 1;
         generateApple();
     }
@@ -95,11 +99,11 @@ function eat() {
 
 function drawApple() {
     ctx.beginPath();
-    
+
     ctx.fillStyle = "red";
-    ctx.arc(appleX + size/2, appleY + size/2, size/3, 0, 360);
+    ctx.arc(appleX + size / 2, appleY + size / 2, size / 3, 0, 360);
     ctx.fill();
-    
+
     ctx.closePath();
 }
 
@@ -114,9 +118,9 @@ function bodyCollision() {
         var idx = snakeList.length - 1;
         if (snakeList[idx].x == snakeList[i].x && snakeList[idx].y == snakeList[i].y) {
             return true
-        }  
+        }
     }
- 
+
 }
 //==========================================
 var canvas = document.getElementById("snake");
