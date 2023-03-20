@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,6 +8,14 @@
     <title>1to50</title>
 
     <style>
+        .darkMode {
+            background-color: rgb(30, 30, 30);
+        }
+
+        .darkMode td {
+            color: rgb(30, 30, 30);
+            border: 2px solid rgb(30, 30, 30);
+        }
 
         /* timer */
         #timerTable {
@@ -15,20 +24,24 @@
             width: 500px;
             height: 70px;
         }
+
         #timerTd {
             font-size: 35px;
             font-weight: bold;
             color: rgb(240, 70, 70);
         }
+
         #gameNumTd {
             width: 50px;
             font-size: 35px;
             font-weight: bold;
             color: lightgray;
         }
+
         #imgTd {
             width: 80px;
         }
+
         #timerImg {
             padding-left: 20px;
             padding-top: 5px;
@@ -44,18 +57,22 @@
             width: 500px;
             height: 150px;
         }
+
         #headerTable td {
             padding: 15px;
         }
+
         #mainText {
             font-size: 30px;
             font-weight: bold;
             color: tomato;
         }
+
         #subText {
             font-size: 15px;
             color: gray;
         }
+
         #replyBtn {
             width: 80px;
             height: 40px;
@@ -63,13 +80,14 @@
             border: 1px solid lightgray;
             border-radius: 5px;
             cursor: pointer;
-        }  
+        }
 
         /* game */
         #gameTable {
             margin: 0 auto;
             text-align: center;
         }
+
         .block {
             width: 80px;
             height: 80px;
@@ -82,11 +100,79 @@
             font-weight: bold;
             color: white;
         }
-        
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: tomato;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
     </style>
 
 </head>
-<body>
+
+<body class="">
+    <div>
+        <label class="switch">
+            <input type="checkbox" onclick="turnDarkMode()">
+            <span class="slider"></span>
+        </label>
+    </div>
 
     <table id="timerTable">
         <tr>
@@ -98,7 +184,7 @@
 
     <table id="headerTable">
         <tr>
-            <td >
+            <td>
                 <div id="mainText">1to50</div>
                 <div id="subText">1부터 50까지 순서대로 터치하여 없애보세요.</div>
             </td>
@@ -149,7 +235,6 @@
     </table>
 
     <script>
-
         let gameNum = 1;
         let size = 5;
         let frontList = [];
@@ -157,13 +242,13 @@
 
         let second = 0;
         let timer = 0;
-        
+
         function setTime() {
             second += 1;
 
             let share = parseInt(second / 100);
             let modNum = second % 100;
-            if(modNum < 10) {
+            if (modNum < 10) {
                 modNum = "0" + modNum;
             }
             let result = share + "." + modNum;
@@ -172,7 +257,7 @@
         }
 
         function shuffle() {
-            for(let i=0; i<50; i++) {
+            for (let i = 0; i < 50; i++) {
                 let y = Math.floor(Math.random() * size);
                 let x = Math.floor(Math.random() * size);
                 let temp = frontList[0][0];
@@ -190,8 +275,8 @@
         function setData() {
             let $gameTable = document.querySelector("#gameTable");
 
-            for(let i=0; i<size; i++) {
-                for(let j=0; j<size; j++) {
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
                     $gameTable.children[0].children[i].children[j].innerText = frontList[i][j];
                     $gameTable.children[0].children[i].children[j].addEventListener("click", checkBlock);
                 }
@@ -201,14 +286,15 @@
         function checkBlock(e) {
             let $gameTable = document.querySelector("#gameTable");
 
-            for(let i=0; i<size; i++) {
-                for(let j=0; j<size; j++) {
-                    if(e.target == $gameTable.children[0].children[i].children[j]) {
-                        if($gameTable.children[0].children[i].children[j].innerText == gameNum) {
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
+                    if (e.target == $gameTable.children[0].children[i].children[j]) {
+                        if ($gameTable.children[0].children[i].children[j].innerText == gameNum) {
 
-                            if(1 <= gameNum && gameNum <= size * size) {
+                            if (1 <= gameNum && gameNum <= size * size) {
                                 $gameTable.children[0].children[i].children[j].innerText = backList[i][j];
-                                $gameTable.children[0].children[i].children[j].style.backgroundColor = "rgb(240, 70, 70)";
+                                $gameTable.children[0].children[i].children[j].style.backgroundColor =
+                                    "rgb(240, 70, 70)";
                             } else {
                                 $gameTable.children[0].children[i].children[j].innerText = "";
                                 $gameTable.children[0].children[i].children[j].style.cursor = "default";
@@ -216,36 +302,36 @@
                             }
 
                             gameNum += 1;
-                        } 
+                        }
                     }
                 }
             }
 
-            if(gameNum >= size * size * 2 + 1) {
+            if (gameNum >= size * size * 2 + 1) {
                 document.querySelector("#gameNumTd").innerText = size * size * 2;
             } else {
                 document.querySelector("#gameNumTd").innerText = gameNum;
             }
 
-            if(gameNum == 2) {
+            if (gameNum == 2) {
                 timer = setInterval(setTime, 10);
             }
 
-            if(gameNum == size * size * 2 + 1) {
+            if (gameNum == size * size * 2 + 1) {
                 clearInterval(timer);
             }
         }
 
         function reply() {
-            location.href="index.html";
+            location.href = "index.html";
         }
 
         function init() {
             let num = 1;
-            for(let i=0; i<size; i++) {
+            for (let i = 0; i < size; i++) {
                 let frontTemp = [];
                 let backTemp = [];
-                for(let j=0; j<size; j++) {
+                for (let j = 0; j < size; j++) {
                     frontTemp.push(num);
                     backTemp.push(num + size * size);
                     num += 1;
@@ -254,18 +340,30 @@
                 backList.push(backTemp);
             }
 
-            
+
 
             shuffle();
             setData();
 
         }
 
+        const $body = document.querySelector("body");
+        const $tdList = document.querySelectorAll("td");
+        const DARKMODE_KEY = "darkMode";
+
+        function turnDarkMode() {
+            console.log(document.querySelector("input").checked)
+            if (document.querySelector("input").checked) {
+                
+                $body.classList.add(DARKMODE_KEY);
+            } else {
+                $body.classList.remove(DARKMODE_KEY);
+            }
+        }
+
         init();
-
-        
-
     </script>
 
 </body>
+
 </html>

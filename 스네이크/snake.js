@@ -64,7 +64,7 @@ function drawTile() {
 }
 
 function drawWall() {
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "rgb(30, 30, 30)";
     ctx.fillRect(0, 0, size, canvas.height);
     ctx.fillRect(0, 0, canvas.width, size);
     ctx.fillRect(canvas.width - size, 0, size, canvas.height);
