@@ -27,15 +27,16 @@ function draw() {
 function setSnake() {
     x += dx;
     y += dy;
-    console.log(x, y)
     var snake = {
         x: x,
         y: y,
         color: "orange"
     };
     while (snakeList.length > snakeLength) {
+        // 뱀몸 제한을 넘으면 배열 안의 객체를 자르고
         snakeList.shift();
     }
+    // 새로운 객체를 배열 안에 집어 넣는다
     snakeList.push(snake);
 }
 
@@ -75,9 +76,11 @@ function generateApple() {
     while (true) {
         check = true;
 
+        // 랜덤한 위치에 사과를 생성한다.
         appleX = (Math.floor(Math.random() * ((canvas.width - 2 * size)) / size) + 1) * size;
         appleY = (Math.floor(Math.random() * ((canvas.height - 2 * size)) / size) + 1) * size;
 
+        // 사과가 뱀몸 안에 생성된다면, 다시 while문을 돌려 새로 생성한다
         for (var i = 0; i < snakeList.length; i += 1) {
             if (snakeList[i].x == appleX && snakeList[i].y == appleY) {
                 check = false;
@@ -92,6 +95,7 @@ function generateApple() {
 
 function eat() {
     if (x == appleX && y == appleY) {
+        // 사과를 먹으면 뱀몸의 제한을 늘린다
         snakeLength += 1;
         generateApple();
     }
