@@ -262,3 +262,4 @@ function checkWin() {
 function replay() {
     location.href="index.html";
 }
+

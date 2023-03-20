@@ -257,6 +257,7 @@
         }
 
         function shuffle() {
+            // 배열 안의 숫자를 무작위로 섞는다
             for (let i = 0; i < 50; i++) {
                 let y = Math.floor(Math.random() * size);
                 let x = Math.floor(Math.random() * size);
@@ -277,7 +278,9 @@
 
             for (let i = 0; i < size; i++) {
                 for (let j = 0; j < size; j++) {
+                    // frontList 배열의 숫자를 랜덤으로 출력
                     $gameTable.children[0].children[i].children[j].innerText = frontList[i][j];
+                    // 클릭 이벤트가 발생하면 checkBlock 함수를 실행한다
                     $gameTable.children[0].children[i].children[j].addEventListener("click", checkBlock);
                 }
             }
@@ -292,15 +295,16 @@
                         if ($gameTable.children[0].children[i].children[j].innerText == gameNum) {
 
                             if (1 <= gameNum && gameNum <= size * size) {
+                                // 숫자를 차례대로 누를 때, backList 배열 안의 숫자를 랜덤으로 출력
                                 $gameTable.children[0].children[i].children[j].innerText = backList[i][j];
                                 $gameTable.children[0].children[i].children[j].style.backgroundColor =
                                     "rgb(240, 70, 70)";
                             } else {
+                                // 클릭 수(gameNum)이 25가 넘어가면 블럭을 비우고 없앤다
                                 $gameTable.children[0].children[i].children[j].innerText = "";
                                 $gameTable.children[0].children[i].children[j].style.cursor = "default";
                                 $gameTable.children[0].children[i].children[j].style.backgroundColor = "white";
                             }
-
                             gameNum += 1;
                         }
                     }
@@ -336,15 +340,13 @@
                     backTemp.push(num + size * size);
                     num += 1;
                 }
+                // 시작할 때 보이는 1부터 25까지의 숫자를 front 배열에
                 frontList.push(frontTemp);
+                // 숫자가 클릭되고 보이는 26부터 50까지의 숫자를 back 배열에 넣는다
                 backList.push(backTemp);
             }
-
-
-
             shuffle();
             setData();
-
         }
 
         const $body = document.querySelector("body");
