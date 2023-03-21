@@ -140,31 +140,28 @@ function mark(e) {
     }
 
     if ($contentTable.children[y].children[x].innerText == "") {
-
         if (document.querySelectorAll(".playerBtn")[0].style.backgroundColor == "") {
             document.querySelectorAll(".playerBtn")[0].style.backgroundColor = "tomato";
             document.querySelectorAll(".playerBtn")[1].style.backgroundColor = "";
-
+            // 3x3 배열 위치에 2를 넣는다
             list[y][x] = 2;
         } else {
             document.querySelectorAll(".playerBtn")[0].style.backgroundColor = "";
             document.querySelectorAll(".playerBtn")[1].style.backgroundColor = "tomato";
-
+            // 3x3 배열 위치에 1를 넣는다
             list[y][x] = 1;
         }
-
-        console.log(list);
-
         if (turn) {
+            // 플레이어 출력
             $contentTable.children[y].children[x].innerText = me;
         } else {
+            // 상대 플레이어 출력
             $contentTable.children[y].children[x].innerText = com;
         }
-
         $contentTable.children[y].children[x].style.fontSize = "80px";
         $contentTable.children[y].children[x].style.fontWeight = "bold";
         $contentTable.children[y].children[x].style.color = "tomato";
-
+        // 턴 변경
         turn = !turn;
     }
 
@@ -199,6 +196,7 @@ function checkWin() {
         let count1 = 0;
         let count2 = 0;
         for (let j = 0; j < 5; j++) {
+            // list 배열 안에 1이나 2의 숫자를 카운트 한다
             if (list[i][j] == 1) {
                 count1 += 1;
             }
@@ -206,6 +204,7 @@ function checkWin() {
                 count2 += 1;
             }
         }
+        // 승리한 플레이어 반환
         if (count1 == 3) {
             win1 = true;
         }
