@@ -6,12 +6,12 @@ let game = 0;
 
 function selectPlayer(player) {
     me = player;
-    if(me == "O") {
+    if (me == "O") {
         com = "X";
     } else {
         com = "O";
     }
-    
+
     // 화면 지우기
     document.querySelector("#mainTable").remove();
 
@@ -44,14 +44,14 @@ function drawTurnTable() {
     $playerBtn.innerText = "O's Turn";
     $td.append($playerBtn);
     $tr.append($td);
-    
+
     $td = document.createElement("td");
     $playerBtn = document.createElement("button");
     $playerBtn.classList = "playerBtn";
     $playerBtn.innerText = "X's Turn";
     $td.append($playerBtn);
     $tr.append($td);
-    
+
     $turnTable.append($tr);
 
     document.querySelector("#gameTableTd").append($turnTable);
@@ -61,7 +61,7 @@ function drawContentTable() {
     let $contentTable = document.createElement("table");
     $contentTable.id = "contentTable";
 
-    for(let i=0; i<3; i++) {
+    for (let i = 0; i < 3; i++) {
         let $tr = document.createElement("tr");
 
         let $td = document.createElement("td");
@@ -77,7 +77,7 @@ function drawContentTable() {
         $td = document.createElement("td");
         $td.classList = "spaceBlock";
         $tr.append($td);
-        
+
         $td = document.createElement("td");
         $td.classList = "block";
         $tr.append($td);
@@ -104,12 +104,12 @@ function init() {
     drawTurnTable();
     drawContentTable();
 
-    for(let i=0; i<5; i++) {
+    for (let i = 0; i < 5; i++) {
         let temp = [0, 3, 0, 3, 0];
         list.push(temp);
     }
 
-    if(me == "O") {
+    if (me == "O") {
         document.querySelectorAll(".playerBtn")[0].style.backgroundColor = "tomato";
         com = "X";
     } else {
@@ -118,7 +118,7 @@ function init() {
     }
 
     let blockList = document.querySelectorAll(".block");
-    for(let i=0; i<blockList.length; i++) {
+    for (let i = 0; i < blockList.length; i++) {
         blockList[i].addEventListener("click", mark);
     }
 }
@@ -130,18 +130,18 @@ function mark(e) {
 
     let y = 0;
     let x = 0;
-    for(let i=0; i<5; i++) {
-        for(let j=0; j<5; j++) {
-            if(e.target == $contentTable.children[i].children[j]) {
+    for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 5; j++) {
+            if (e.target == $contentTable.children[i].children[j]) {
                 y = i;
                 x = j;
             }
         }
     }
 
-    if($contentTable.children[y].children[x].innerText == "") {
+    if ($contentTable.children[y].children[x].innerText == "") {
 
-        if(document.querySelectorAll(".playerBtn")[0].style.backgroundColor == "") {
+        if (document.querySelectorAll(".playerBtn")[0].style.backgroundColor == "") {
             document.querySelectorAll(".playerBtn")[0].style.backgroundColor = "tomato";
             document.querySelectorAll(".playerBtn")[1].style.backgroundColor = "";
 
@@ -149,13 +149,13 @@ function mark(e) {
         } else {
             document.querySelectorAll(".playerBtn")[0].style.backgroundColor = "";
             document.querySelectorAll(".playerBtn")[1].style.backgroundColor = "tomato";
-            
+
             list[y][x] = 1;
         }
 
         console.log(list);
 
-        if(turn) {
+        if (turn) {
             $contentTable.children[y].children[x].innerText = me;
         } else {
             $contentTable.children[y].children[x].innerText = com;
@@ -169,11 +169,11 @@ function mark(e) {
     }
 
     let result = checkWin();
-    if(result == 1) {
+    if (result == 1) {
         document.querySelector("#headerTable").innerText = "Player O won the game!";
         removeEvent();
         document.querySelector("#replayBtn").style.display = "block";
-    } else if(result == 2) {
+    } else if (result == 2) {
         document.querySelector("#headerTable").innerText = "Player X won the game!";
         removeEvent();
         document.querySelector("#replayBtn").style.display = "block";
@@ -183,7 +183,7 @@ function mark(e) {
 
 function removeEvent() {
     let blockList = document.querySelectorAll(".block");
-    for(let i=0; i<blockList.length; i++) {
+    for (let i = 0; i < blockList.length; i++) {
         blockList[i].removeEventListener("click", mark);
         blockList[i].style.cursor = "auto";
     }
@@ -193,66 +193,66 @@ function checkWin() {
 
     let win1 = false;
     let win2 = false;
-    
+
     // 가로 검사
-    for(let i=0; i<5; i++) {
+    for (let i = 0; i < 5; i++) {
         let count1 = 0;
         let count2 = 0;
-        for(let j=0; j<5; j++) {
-            if(list[i][j] == 1) {
+        for (let j = 0; j < 5; j++) {
+            if (list[i][j] == 1) {
                 count1 += 1;
             }
-            if(list[i][j] == 2) {
+            if (list[i][j] == 2) {
                 count2 += 1;
             }
         }
-        if(count1 == 3) {
+        if (count1 == 3) {
             win1 = true;
         }
-        if(count2 == 3) {
+        if (count2 == 3) {
             win2 = true;
         }
     }
 
     // 세로 검사
-    for(let i=0; i<5; i++) {
+    for (let i = 0; i < 5; i++) {
         let count1 = 0;
         let count2 = 0;
-        for(let j=0; j<5; j++) {
-            if(list[j][i] == 1) {
+        for (let j = 0; j < 5; j++) {
+            if (list[j][i] == 1) {
                 count1 += 1;
             }
-            if(list[j][i] == 2) {
+            if (list[j][i] == 2) {
                 count2 += 1;
             }
         }
-        if(count1 == 3) {
+        if (count1 == 3) {
             win1 = true;
         }
-        if(count2 == 3) {
+        if (count2 == 3) {
             win2 = true;
         }
     }
 
     // 대각선 / 검사
-    if(list[0][4] == 1 && list[2][2] == 1 && list[4][0] == 1) {
+    if (list[0][4] == 1 && list[2][2] == 1 && list[4][0] == 1) {
         win1 = true;
     }
-    if(list[0][4] == 2 && list[2][2] == 2 && list[4][0] == 2) {
+    if (list[0][4] == 2 && list[2][2] == 2 && list[4][0] == 2) {
         win2 = true;
     }
     // 대각선 \ 검사
-    if(list[0][0] == 1 && list[2][2] == 1 && list[4][4] == 1) {
+    if (list[0][0] == 1 && list[2][2] == 1 && list[4][4] == 1) {
         win1 = true;
     }
-    if(list[0][0] == 2 && list[2][2] == 2 && list[4][4] == 2) {
+    if (list[0][0] == 2 && list[2][2] == 2 && list[4][4] == 2) {
         win2 = true;
     }
 
-    if(win1) {
+    if (win1) {
         game = 1;
     }
-    if(win2) {
+    if (win2) {
         game = 2;
     }
 
@@ -260,5 +260,5 @@ function checkWin() {
 }
 
 function replay() {
-    location.href="index.html";
+    location.href = "index.html";
 }
